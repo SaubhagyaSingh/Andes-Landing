@@ -29,37 +29,37 @@ const Services = () => {
       <div className="flex overflow-x-auto md:overflow-x-hidden  overflow-y-hidden space-x-4 md:grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
         <ItemCard
           title="Wash"
-          price="₹59/Kg"
+          price="₹69/Kg"
           description="For everyday laundry, bedsheets and towels."
           includes={["WASH", "TUMBLE-DRY"]}
-          serviceTime="24H*"
+          serviceTime="48H - 72H"
           returned="IN A LAUNDRY/ANDES BAG"
           icon="🧺"
         />
         <ItemCard
           title="Wash & Iron"
-          price="₹79/Kg"
+          price="₹89/Kg"
           description="For everyday laundry that requires ironing."
           includes={["WASH", "TUMBLE-DRY", "IRONING"]}
-          serviceTime="48h"
+          serviceTime="48H - 72H"
           returned="ON HANGERS"
           icon="👚"
         />
         <ItemCard
           title="Dry Cleaning"
-          price="₹209/Kg"
+          price="50/Kg"
           description="For delicate items and fabrics."
           includes={["DRY CLEANING", "IRONING"]}
-          serviceTime="48h"
+          serviceTime="48H - 72H"
           returned="ON HANGERS"
           icon="🧼"
         />
         <ItemCard
           title="Shoes Cleaning"
-          price="₹259/Pair"
+          price="149 - 199/Pair"
           description="For all types of shoes."
           includes={["CUSTOM CLEANING"]}
-          serviceTime="UP TO 3 DAYS"
+          serviceTime="48H - 72H"
           returned="IN A LAUNDRY/ANDES BAG"
           icon="👞"
         />

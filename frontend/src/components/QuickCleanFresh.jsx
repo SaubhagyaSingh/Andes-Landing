@@ -19,10 +19,10 @@ const QuickCleanFresh = () => {
       {/* Text and Button */}
       <div className="relative text-center max-w-xl mx-auto justify-center flex-col flex">
         <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Quick. Clean. Fresh.
+          Quick. Clean. Fresh.✨
         </h2>
         <p className="text-lg md:text-xl text-white mb-10">
-          Your laundry delivered in 24h
+          Your laundry delivered in 48h
         </p>
         <button
           onClick={handleButtonClick}

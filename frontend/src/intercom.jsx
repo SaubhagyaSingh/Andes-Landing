@@ -1,9 +1,9 @@
-import Intercom from '@intercom/messenger-js-sdk';
+import React from 'react'
 
-export default function Component() {
-  Intercom({
-    app_id: 'o4sf91nl',
-  });
-
-  return <div></div>;
+const intercom = () => {
+  return (
+    <div>intercom</div>
+  )
 }
+
+export default intercom

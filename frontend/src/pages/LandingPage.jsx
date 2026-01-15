@@ -9,7 +9,6 @@ import Future from "../components/Future.jsx";
 import BookNow from "../components/BookNow.jsx";
 // import Serviceinfo from "../components/Serviceinfo.jsx";
 import ServiceFeatures from "../components/ServiceFeatures.jsx";
-import MyFooter from "../components/MyFooter.jsx";
 import playstore from "../assets/playstoreicon.svg";
 import appstore from "../assets/appstoreicon.svg"; // Import the App Store icon
 import AndesAssured from "../components/AA.jsx";
@@ -23,6 +22,7 @@ import card4 from "../assets/card4.png";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import Appsupport from "../components/Appsupport.jsx";
 import FAQ from "../components/Faq.jsx";
+import {Helmet} from "react-helmet-async";
 
 const bulletPoints1 = [
   { icon: "🔔", text: "Get notified when your order is ready for pick-up" },
@@ -50,19 +50,23 @@ const LandingPage = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Andes Laundry - Home</title>
+        <meta name="description" content="Welcome to Andes Laundry, your trusted laundry partner in Pune." />
+      </Helmet>
       {/* Hero Section */}
       <div className="bg-blue-500 md:min-h-screen flex justify-center items-center pt-16 md:pt-2">
         <main className="container mx-auto px-4 flex flex-col md:flex-row items-center">
           {/* Text Section */}
           <div className="mt-16 w-full md:w-[500px] text-white md:ml-32 mb-12 md:mb-0 md:pr-8">
             <h1 className="text-4xl sm:text-4xl md:text-6xl font-bold md:mb-2 leading-tight mt-2">
-              Laundry & dry
+              Quality Laundry.
             </h1>
             <h1 className="text-4xl sm:text-4xl md:text-6xl font-bold md:mb-2  leading-tight">
-              cleaning within
+              Delivery in
             </h1>
             <h1 className="text-4xl sm:text-4xl md:text-6xl font-bold md:mb-10 mb-2 leading-tight">
-              24h delivery
+              minutes
             </h1>
 
             {/* Typewriter text with fixed height and left alignment */}
@@ -75,6 +79,12 @@ const LandingPage = () => {
             >
               {/* {typewriterText} */} Kothrud, Pune
             </h1>
+
+            <div className="mt-2 mb-6">
+              <span className="inline-block bg-white bg-opacity-20 rounded-full px-5 py-2 text-lg md:text-xl font-semibold text-white shadow-lg backdrop-blur-md border border-yellow-300">
+                🚀 Expanding soon to your city. Stay tuned for the next revolution in laundry!
+              </span>
+            </div>
 
             {/* Store links */}
             <div className="rounded-lg flex flex-row items-center mt-6 md:mb-4 space-x-4">
@@ -102,7 +112,7 @@ const LandingPage = () => {
               </div>
               <div className="flex items-center shadow-white p-2 md:p-4 rounded-lg bg-white">
                 <a
-                  href="#"
+                  href="https://apps.apple.com/in/app/andes/id6747010488"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center"
@@ -145,7 +155,7 @@ const LandingPage = () => {
               The #1 Smart Laundry Service
             </h1>
             <p className="text-sm">
-              in categories Dry cleaner, Laundry service and Laundrette{" "}
+              In category of laundry dry cleaning and ironing{" "}
             </p>
           </div>
           {/* Star Rating Section */}
@@ -214,7 +224,6 @@ const LandingPage = () => {
         <Appsupport />
       </section>
       <FAQ />
-      <MyFooter /> {/* Footer stays at the bottom of the page */}
     </div>
   );
 };

@@ -4,15 +4,21 @@ import {
   FaShieldAlt,
   FaLeaf,
 } from "react-icons/fa";
-import MyFooter from "../components/MyFooter";
+import {Helmet} from "react-helmet-async";
+
+
 
 const AndesAssured = () => {
   return (
     <>
+      <Helmet>
+        <title>Andes Assured - Andes Laundry</title>
+        <meta name="description" content="Learn more about Andes Laundry's commitment to quality and customer satisfaction." />
+      </Helmet>
       <div className="bg-gray-100 py-12 mt-12">
         <div className="container mx-auto px-6 md:px-12 md:pt-24 md:pb-24">
           <h1 className="text-4xl font-bold text-center text-blue-900 mb-12">
-            What is Andes Assured?
+            Why Andes Only?
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
@@ -22,7 +28,7 @@ const AndesAssured = () => {
               </h2>
               <p className="text-gray-600">
                 Every piece of clothing undergoes a rigorous quality check to
-                ensure it’s cleaned and handled with the utmost care.
+                ensure it's cleaned and handled with the utmost care.
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
@@ -36,13 +42,13 @@ const AndesAssured = () => {
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
-              <FaShieldAlt className="text-blue-500 text-6xl mx-auto mb-4" />
+              <FaLeaf className="text-blue-500 text-6xl mx-auto mb-4" />
               <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                Clothes Insurance
+                Water Efficient
               </h2>
               <p className="text-gray-600">
-                Your clothes are in safe hands. If anything goes wrong, we’ve
-                got you covered.
+                We use advanced water-saving technologies to minimize waste while
+                maintaining superior cleaning quality.
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
@@ -57,13 +63,12 @@ const AndesAssured = () => {
             </div>
           </div>
           <div className="text-center mt-20">
-            <h2 className="text-xl md:text-2xl  font-serif text-gray-800">
-              &quot;Luxury you can afford, savings you’ll love&quot;
+            <h2 className="text-xl md:text-2xl font-serif text-gray-800">
+              &quot;Got your clothes dirty? Andes now!&quot;
             </h2>
           </div>
         </div>
       </div>
-      <MyFooter />
     </>
   );
 };

@@ -22,12 +22,12 @@ const MyFooter = () => {
             <Link to="/other" className="hover:text-blue-400">
               Terms & Conditions
             </Link>
-            <Link to="/other" className="hover:text-blue-400">
+            <Link to="/privacypolicy" className="hover:text-blue-400">
               Privacy Policy
             </Link>
             <Link to="/other" className="hover:text-blue-400">
               Contact
-            </Link>
+            </Link> 
             <Link to="/other" className="hover:text-blue-400">
               Return and Refund Policy
             </Link>
