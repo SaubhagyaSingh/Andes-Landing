@@ -640,7 +640,11 @@ service cloud.firestore {
 
     // Hostel Messages queue security rules
     match /hostel_messages/{messageId} {
-      allow create, read: if request.auth != null;
+      allow create, read: if request.auth != null && (
+        request.auth.token.email == "ceo@andes.co.in" ||
+        request.auth.token.email == "andesnow1604@gmail.com" ||
+        request.auth.token.email == "signaturegrowthcapital@andes.co.in"
+      );
     }
 
     // Catch-all: everything else requires auth.

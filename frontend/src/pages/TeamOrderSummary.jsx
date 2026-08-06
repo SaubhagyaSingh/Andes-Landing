@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { httpsCallable } from 'firebase/functions';
 import { functions, db } from '../firebase';
 import { collection, addDoc, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import './TeamOrderSummary.css';
 
@@ -225,6 +226,18 @@ function BeforePickupForm({ pickupTime, setPickupTime, deliveryDate, setDelivery
 // MAIN PAGE COMPONENT
 // ==========================================
 export default function TeamOrderSummary() {
+  const { currentUser } = useAuth();
+
+  const isAuthorized = useMemo(() => {
+    if (!currentUser || !currentUser.email) return false;
+    const allowedEmails = [
+      'ceo@andes.co.in',
+      'andesnow1604@gmail.com',
+      'signaturegrowthcapital@andes.co.in'
+    ];
+    return allowedEmails.includes(currentUser.email.toLowerCase());
+  }, [currentUser]);
+
   // Tab state
   const [activeTab, setActiveTab] = useState('before_pickup');
 
@@ -240,6 +253,16 @@ export default function TeamOrderSummary() {
   // Shared state
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+
+  if (!isAuthorized) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0e1a] text-white p-6 text-center">
+        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
+        <h1 className="text-2xl font-bold mb-2 text-red-500">Access Denied</h1>
+        <p className="text-gray-400 max-w-sm">You do not have permission to view the Team Order Summary page. Please contact your administrator.</p>
+      </div>
+    );
+  }
 
   // --- Order Summary Handlers ---
   const handleNameChange = useCallback((index, name) => {
