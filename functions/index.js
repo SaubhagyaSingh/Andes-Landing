@@ -488,3 +488,98 @@ exports.notifyWhatsAppOrderStatus = onDocumentWritten(
         }
     }
 );
+
+// ==========================================
+// 6. PROCESS HOSTEL WHATSAPP QUEUE
+// ==========================================
+exports.processHostelWhatsAppQueue = onDocumentCreated(
+    {
+        document: "hostel_messages/{messageId}",
+        secrets: [whatsappAccessToken, whatsappPhoneId],
+        region: "us-central1",
+    },
+    async (event) => {
+        const snapshot = event.data;
+        if (!snapshot) return;
+
+        const data = snapshot.data();
+        const { to, type, templateName, parameters } = data;
+
+        if (!to || !type) {
+            await snapshot.ref.update({ status: "failed", error: "Missing recipient (to) or type" });
+            return;
+        }
+
+        const phoneId = whatsappPhoneId.value();
+        const token = whatsappAccessToken.value();
+        const META_API_VERSION = "v19.0";
+        const url = `https://graph.facebook.com/${META_API_VERSION}/${phoneId}/messages`;
+
+        let payload = {
+            messaging_product: "whatsapp",
+            to: to.replace(/\D/g, ""), // Sanitize number
+        };
+
+        if (type === "template") {
+            if (!templateName) {
+                await snapshot.ref.update({ status: "failed", error: "Missing templateName for template message" });
+                return;
+            }
+            payload.type = "template";
+            payload.template = {
+                name: templateName,
+                language: { code: "en" },
+                components: parameters ? [{
+                    type: "body",
+                    parameters: parameters.map(p => ({ type: "text", text: String(p) }))
+                }] : []
+            };
+        } else {
+            // Text message (fallback)
+            if (!data.body) {
+                await snapshot.ref.update({ status: "failed", error: "Missing body for text message" });
+                return;
+            }
+            payload.type = "text";
+            payload.text = { body: data.body };
+        }
+
+        console.log(`Processing WhatsApp Queue for message ${event.params.messageId} to ${to}`);
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.error("WhatsApp Queue API Error:", result);
+                await snapshot.ref.update({
+                    status: "failed",
+                    error: result,
+                    updatedAt: FieldValue.serverTimestamp()
+                });
+            } else {
+                console.log("WhatsApp Queue message sent successfully.");
+                await snapshot.ref.update({
+                    status: "sent",
+                    messageId: result.messages?.[0]?.id,
+                    updatedAt: FieldValue.serverTimestamp()
+                });
+            }
+        } catch (error) {
+            console.error("WhatsApp Queue Exception:", error);
+            await snapshot.ref.update({
+                status: "failed",
+                error: error.message,
+                updatedAt: FieldValue.serverTimestamp()
+            });
+        }
+    }
+);

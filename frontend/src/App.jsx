@@ -36,6 +36,7 @@ const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
 const NotFound = lazy(() => import("./pages/NotFound")); // Planned for next step
 const ContactUs = lazy(() => import("./pages/ContactUs"));
 const Calculator = lazy(() => import("./pages/Calculator"));
+const TeamOrderSummary = lazy(() => import("./pages/TeamOrderSummary"));
 
 import PageLoader from './components/common/PageLoader';
 
@@ -110,6 +111,20 @@ function App() {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/cococalculator" element={<Calculator />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
+  if (location.pathname === '/team/order-summary') {
+    return (
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/team/order-summary" element={
+            <ProtectedRoute>
+              <TeamOrderSummary />
+            </ProtectedRoute>
+          } />
         </Routes>
       </Suspense>
     );
