@@ -1,7 +1,7 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { httpsCallable } from 'firebase/functions';
 import { functions, db } from '../firebase';
-import { collection, addDoc, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, serverTimestamp, getDocs, query, where, Timestamp } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import './TeamOrderSummary.css';
@@ -42,12 +42,32 @@ const ALL_ITEMS = ITEM_CATEGORIES.flatMap((c) => c.items);
 
 const HOSTEL_PHONE = '918485820252';
 
-// Default hostel names
-const DEFAULT_HOSTELS = [
-  { name: 'Hostel 99 KP' },
-  { name: 'Hostel 99-03' },
-  { name: 'Hostel 99-88' },
-];
+// ==========================================
+// FIREBASE ITEM NAME → INTERNAL KEY MAPPING
+// (case-insensitive, handles variants)
+// ==========================================
+const FIREBASE_NAME_TO_KEY = {
+  'single bedsheet':  'single_bedsheet',
+  'double bedsheet':  'double_bedsheet',
+  'duvet cover':      'duvet_cover',
+  'pillow cover':     'pillow_cover',
+  'blanket':          'blanket',
+  'bath towel':       'bath_towel',
+  'bath towels':      'bath_towel',
+  'hand towel':       'hand_towel',
+  'face towel':       'face_towel',
+  'bath mat':         'bath_mat',
+  'door mat':         'door_mat',
+  'curtain':          'curtain',
+};
+
+function firebaseNameToKey(name) {
+  return FIREBASE_NAME_TO_KEY[name.toLowerCase().trim()] || null;
+}
+
+// ==========================================
+// HELPERS
+// ==========================================
 
 // Helper: create empty counts for one hostel
 function createEmptyCounts() {
@@ -58,7 +78,7 @@ function createEmptyCounts() {
   return counts;
 }
 
-// Helper: format today's date
+// Helper: format today's date (readable)
 function formatDate() {
   const d = new Date();
   return d.toLocaleDateString('en-IN', {
@@ -68,15 +88,7 @@ function formatDate() {
   });
 }
 
-// Helper: get default delivery date (2 days from now)
-function getDefaultDeliveryDate() {
-  const d = new Date();
-  d.setDate(d.getDate() + 2);
-  // Format as YYYY-MM-DD for input[type=date]
-  return d.toISOString().split('T')[0];
-}
-
-// Helper: format a date string (YYYY-MM-DD) to readable format
+// Helper: format a Date object to readable
 function formatDateReadable(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr + 'T00:00:00');
@@ -85,6 +97,22 @@ function formatDateReadable(dateStr) {
     month: 'long',
     year: 'numeric',
   });
+}
+
+// Helper: get today as YYYY-MM-DD
+function getTodayStr() {
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+// Helper: get default delivery date (2 days from now)
+function getDefaultDeliveryDate() {
+  const d = new Date();
+  d.setDate(d.getDate() + 2);
+  return d.toISOString().split('T')[0];
 }
 
 // ==========================================
@@ -187,7 +215,7 @@ function BeforePickupForm({ pickupTime, setPickupTime, deliveryDate, setDelivery
         <div className="field-group">
           <label className="field-label" htmlFor="pickup-time">
             <span className="field-label-icon">🕐</span>
-            Pickup & Delivery Time
+            Pickup &amp; Delivery Time
           </label>
           <input
             id="pickup-time"
@@ -214,10 +242,50 @@ function BeforePickupForm({ pickupTime, setPickupTime, deliveryDate, setDelivery
             onChange={(e) => setDeliveryDate(e.target.value)}
           />
           <span className="field-hint">
-            Date when washed & ironed linens will be delivered back
+            Date when washed &amp; ironed linens will be delivered back
           </span>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ==========================================
+// ORDER DATE TOOLBAR COMPONENT
+// ==========================================
+function OrderDateToolbar({ selectedDate, onDateChange, onRefresh, loading, orderCount }) {
+  return (
+    <div className="order-date-toolbar">
+      <div className="order-date-toolbar-left">
+        <span className="order-date-icon">📅</span>
+        <div className="order-date-label-group">
+          <span className="order-date-label">Orders for</span>
+          <input
+            type="date"
+            className="order-date-input"
+            value={selectedDate}
+            onChange={(e) => onDateChange(e.target.value)}
+          />
+        </div>
+        {!loading && orderCount !== null && (
+          <span className={`order-count-badge ${orderCount === 0 ? 'empty' : ''}`}>
+            {orderCount === 0 ? 'No orders found' : `${orderCount} hostel${orderCount !== 1 ? 's' : ''} fetched`}
+          </span>
+        )}
+      </div>
+      <button
+        className={`refresh-btn ${loading ? 'loading' : ''}`}
+        onClick={onRefresh}
+        disabled={loading}
+        title="Refresh orders from Firebase"
+      >
+        {loading ? (
+          <div className="spinner" />
+        ) : (
+          <span className="refresh-icon">↻</span>
+        )}
+        {loading ? 'Fetching...' : 'Refresh'}
+      </button>
     </div>
   );
 }
@@ -246,13 +314,92 @@ export default function TeamOrderSummary() {
   const [deliveryDate, setDeliveryDate] = useState(getDefaultDeliveryDate);
 
   // Order Summary state
-  const [hostels, setHostels] = useState(() =>
-    DEFAULT_HOSTELS.map((h) => ({ ...h, counts: createEmptyCounts() }))
-  );
+  const [hostels, setHostels] = useState([]);
+  const [fetchLoading, setFetchLoading] = useState(false);
+  const [orderCount, setOrderCount] = useState(null); // null = not fetched yet
+
+  // Selected date for order fetch (default = today)
+  const [selectedDate, setSelectedDate] = useState(getTodayStr);
 
   // Shared state
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+
+  // ==========================================
+  // FETCH ORDERS FROM FIREBASE
+  // ==========================================
+  const fetchOrders = useCallback(async (dateStr) => {
+    setFetchLoading(true);
+    setOrderCount(null);
+
+    try {
+      // Build start / end of the selected date (local midnight → local 23:59:59)
+      const start = new Date(dateStr + 'T00:00:00');
+      const end   = new Date(dateStr + 'T23:59:59');
+
+      const q = query(
+        collection(db, 'b2b_orders'),
+        where('createdAt', '>=', Timestamp.fromDate(start)),
+        where('createdAt', '<=', Timestamp.fromDate(end))
+      );
+
+      const snapshot = await getDocs(q);
+
+      // Aggregate per hostel (partnerName containing "Hostel99")
+      const hostelMap = {}; // partnerName → aggregated counts
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const partnerName = data.partnerName || '';
+
+        // Only Hostel99 orders
+        if (!partnerName.toLowerCase().includes('hostel99')) return;
+
+        const partnerItems = data.partnerItems || {};
+
+        if (!hostelMap[partnerName]) {
+          hostelMap[partnerName] = createEmptyCounts();
+        }
+
+        // Sum quantities
+        Object.entries(partnerItems).forEach(([fbName, qty]) => {
+          const key = firebaseNameToKey(fbName);
+          if (key && typeof qty === 'number') {
+            hostelMap[partnerName][key] += qty;
+          }
+        });
+      });
+
+      // Convert to hostels array, sorted by name
+      const fetched = Object.entries(hostelMap)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([name, counts]) => ({ name, counts }));
+
+      if (fetched.length === 0) {
+        setHostels([{ name: '', counts: createEmptyCounts() }]);
+        setOrderCount(0);
+        toast.info('No Hostel99 orders found for this date.');
+      } else {
+        setHostels(fetched);
+        setOrderCount(fetched.length);
+        toast.success(`✅ Loaded ${fetched.length} hostel${fetched.length !== 1 ? 's' : ''} from Firebase.`);
+      }
+    } catch (err) {
+      console.error('Error fetching b2b_orders:', err);
+      toast.error('Failed to fetch orders. Check console.');
+      setHostels([{ name: '', counts: createEmptyCounts() }]);
+      setOrderCount(null);
+    } finally {
+      setFetchLoading(false);
+    }
+  }, []);
+
+  // Auto-fetch when the Order Summary tab becomes active or date changes
+  useEffect(() => {
+    if (activeTab === 'order_summary') {
+      fetchOrders(selectedDate);
+    }
+  }, [activeTab, selectedDate, fetchOrders]);
 
   if (!isAuthorized) {
     return (
@@ -295,6 +442,15 @@ export default function TeamOrderSummary() {
     setHostels((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
+  const handleDateChange = useCallback((newDate) => {
+    setSelectedDate(newDate);
+    // useEffect will trigger fetchOrders automatically
+  }, []);
+
+  const handleRefresh = useCallback(() => {
+    fetchOrders(selectedDate);
+  }, [fetchOrders, selectedDate]);
+
   // --- Build Before Pickup Data ---
   const beforePickupData = useMemo(() => {
     if (!pickupTime || !deliveryDate) return null;
@@ -319,7 +475,7 @@ export default function TeamOrderSummary() {
 
   // --- Build Order Summary Data ---
   const orderSummaryData = useMemo(() => {
-    const dateStr = formatDate();
+    const dateStr = formatDateReadable(selectedDate) || formatDate();
     const hostelParts = [];
 
     hostels.forEach((hostel) => {
@@ -354,7 +510,7 @@ export default function TeamOrderSummary() {
     const preview = `Hello Hostel 99 Team,\n\nToday ${dateStr} pickup details are as follows:\n\n${hostelDetails}\n\nIf there are any issues, please report them within 24 hours.\n\nThank you,\nTeam Andes 💙`;
 
     return { params, preview };
-  }, [hostels]);
+  }, [hostels, selectedDate]);
 
   // Current data based on active tab
   const currentData = activeTab === 'before_pickup' ? beforePickupData : orderSummaryData;
@@ -475,24 +631,43 @@ export default function TeamOrderSummary() {
             />
           ) : (
             <>
-              {hostels.map((hostel, index) => (
-                <HostelCard
-                  key={index}
-                  hostel={hostel}
-                  index={index}
-                  onNameChange={(name) => handleNameChange(index, name)}
-                  onCountChange={(itemKey, value) =>
-                    handleCountChange(index, itemKey, value)
-                  }
-                  onDelete={() => handleDeleteHostel(index)}
-                  canDelete={hostels.length > 1}
-                />
-              ))}
+              {/* Date Picker + Refresh Toolbar */}
+              <OrderDateToolbar
+                selectedDate={selectedDate}
+                onDateChange={handleDateChange}
+                onRefresh={handleRefresh}
+                loading={fetchLoading}
+                orderCount={orderCount}
+              />
 
-              <button className="add-hostel-btn" onClick={handleAddHostel}>
-                <span style={{ fontSize: '1.2rem' }}>+</span>
-                Add Hostel
-              </button>
+              {/* Loading State */}
+              {fetchLoading ? (
+                <div className="fetch-loading-card">
+                  <div className="fetch-spinner" />
+                  <span>Fetching Hostel99 orders from Firebase…</span>
+                </div>
+              ) : (
+                <>
+                  {hostels.map((hostel, index) => (
+                    <HostelCard
+                      key={index}
+                      hostel={hostel}
+                      index={index}
+                      onNameChange={(name) => handleNameChange(index, name)}
+                      onCountChange={(itemKey, value) =>
+                        handleCountChange(index, itemKey, value)
+                      }
+                      onDelete={() => handleDeleteHostel(index)}
+                      canDelete={hostels.length > 1}
+                    />
+                  ))}
+
+                  <button className="add-hostel-btn" onClick={handleAddHostel}>
+                    <span style={{ fontSize: '1.2rem' }}>+</span>
+                    Add Hostel
+                  </button>
+                </>
+              )}
             </>
           )}
         </div>
@@ -511,7 +686,9 @@ export default function TeamOrderSummary() {
                 <div className="empty-preview-icon">📋</div>
                 {activeTab === 'before_pickup'
                   ? 'Fill in the details to see the message preview'
-                  : 'Add items to see the message preview'}
+                  : fetchLoading
+                    ? 'Loading orders…'
+                    : 'Add items to see the message preview'}
               </div>
             )}
           </div>
@@ -528,7 +705,7 @@ export default function TeamOrderSummary() {
             <button
               className={`send-btn ${sending ? 'sending' : ''} ${sent ? 'success' : ''}`}
               onClick={handleSend}
-              disabled={sending || !message}
+              disabled={sending || !message || fetchLoading}
             >
               {sending ? (
                 <>
