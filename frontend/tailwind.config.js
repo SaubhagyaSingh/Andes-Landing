@@ -5,7 +5,28 @@ export default {
     "./src/**/*.{js,jsx,ts,tsx}", // Include all JS, JSX, TS, TSX files in src folder
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brand: {
+          DEFAULT: '#0890f1',
+          dark: '#0673c1',
+          light: '#e6f4fe',
+          blue: '#0890f1',
+        },
+      },
+      boxShadow: {
+        'brand-soft': '0 10px 15px -3px rgba(8, 144, 241, 0.1)',
+        'soft': '0 2px 10px -4px rgba(0,0,0,0.05)',
+      },
+      animation: {
+        shine: "shine 1s forwards",
+      },
+      keyframes: {
+        shine: {
+          "100%": { left: "125%" },
+        },
+      },
+    },
   },
   plugins: [],
 }

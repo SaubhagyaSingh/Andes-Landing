@@ -1,53 +1,61 @@
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+
+import { FaClock } from "react-icons/fa";
+
 const QuickCleanFresh = () => {
-  const handleButtonClick = () => {
-    window.open("https://play.google.com/store/apps/details?id=com.andes.laundry", "_blank");
-  };
-
   return (
-    <div className="relative bg-[#3B82F6] pt-32 pb-24 mt-16 mb-16">
-      {/* Curved Background */}
-      {/* <div className="absolute inset-x-0 top-0 transform -translate-y-1/2">
-        <svg viewBox="0 0 1440 320" className="w-full">
-          <path
-            fill="#3B82F6"
-            fillOpacity="1"
-            d="M0,224L1440,64L1440,320L0,320Z"
-          ></path>
-        </svg>
-      </div> */}
+    <div className="relative bg-gradient-to-br from-brand via-brand to-blue-900 pt-32 pb-24 md:pt-40 md:pb-32 flex items-center justify-center overflow-hidden z-10 rounded-b-[3rem] shadow-2xl">
+      {/* Deep Background Glow */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-400/20 rounded-full blur-[120px] -z-10 mix-blend-screen pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-dark/40 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
-      {/* Text and Button */}
-      <div className="relative text-center max-w-xl mx-auto justify-center flex-col flex">
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Quick. Clean. Fresh.
-        </h2>
-        <p className="text-lg md:text-xl text-white mb-10">
-          Your laundry delivered in 24h
-        </p>
-        <button
-          onClick={handleButtonClick}
-          className="bg-white mt-8 text-[#3B82F6] font-semibold rounded-lg shadow-md flex items-center justify-center h-12 w-full md:w-auto px-4 md:px-8 hover:bg-gray-100 transition"
+      <div className="container mx-auto px-4 text-center relative z-20">
+        <motion.h1
+          className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-[1.1] drop-shadow-lg"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <span className="mr-2">
-            {/* Icon or SVG for the button */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="2"
-              stroke="currentColor"
-              className="w-5 h-5 text-[#3B82F6]"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 20.5l-6-4.5V7l6-4.5L18 7v9l-6 4.5z"
-              />
-            </svg>
-          </span>
-          <span>Schedule your pickup</span>
-        </button>
+          Quick. Clean. Fresh.
+        </motion.h1>
+
+        <motion.p
+          className="text-xl md:text-2xl text-blue-100 font-medium mb-12 max-w-2xl mx-auto opacity-95"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+        >
+          Your laundry delivered in 24h
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          <Link
+            to="/order"
+            className="inline-flex items-center justify-center gap-2 bg-yellow-400 text-slate-900 font-black tracking-wide uppercase text-lg px-8 py-4 md:px-10 md:py-5 rounded-xl md:rounded-2xl shadow-[0_10px_40px_rgba(250,204,21,0.4)] hover:-translate-y-1 hover:bg-yellow-300 transition-all duration-300 group relative overflow-hidden w-full sm:w-auto"
+          >
+            <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-40 group-hover:animate-[shine_1s_ease-in-out]" />
+            <FaClock size={24} className="relative z-10" />
+            <span className="relative z-10">Schedule your pickup</span>
+          </Link>
+        </motion.div>
       </div>
+
+      {/* Subtle floating particles (optional flair) */}
+      <motion.div
+        className="absolute top-20 left-20 w-4 h-4 rounded-full bg-white/20 blur-sm pointer-events-none"
+        animate={{ y: [0, -20, 0], opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-20 right-32 w-6 h-6 rounded-full bg-yellow-400/20 blur-md pointer-events-none"
+        animate={{ y: [0, 30, 0], opacity: [0.3, 0.8, 0.3] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+      />
     </div>
   );
 };

@@ -1,40 +1,80 @@
-import { FaTshirt, FaWater, FaTruck } from "react-icons/fa";
+import { FaTshirt, FaWater, FaHeadset } from "react-icons/fa";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2, delayChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: {
+    opacity: 1, scale: 1,
+    transition: { duration: 0.5, ease: "easeOut" }
+  }
+};
 
 const ServiceFeatures = () => {
   return (
-    <div className="text-center py-16 bg-white-100 md:mb-32">
+    <div className="text-center py-2 bg-transparent md:mb-4">
       {/* Main Heading */}
-      <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-gray-800">
-        We Collect, Clean, and Deliver
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="text-3xl md:text-4xl lg:text-5xl font-bold mb-10 text-slate-800 leading-tight">
+        We Collect, Clean and Deliver
         <br className="hidden lg:inline" /> your laundry and dry cleaning.
-      </h1>
+      </motion.h2>
 
       {/* Icon Section */}
-      <div className="flex flex-col md:flex-row justify-center items-center space-y-12 md:space-y-0 md:space-x-16 mt-12">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 mt-6">
+
         {/* Icon 1 */}
-        <div className="flex flex-row items-center gap-2 text-3xl md:text-4xl">
-          <FaTruck className="text-blue-500 mb-2 md:mb-0 mr-2 md:mr-4" />
-          <span className="text-gray-700 text-lg md:text-2xl mr-4 md:mr-10 font-bold">
-            Dedicated 24/7 Support
+        <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center gap-4 group">
+          <div className="bg-brand/10 p-4 rounded-full group-hover:bg-brand/20 transition-colors">
+            <FaHeadset className="text-brand text-3xl group-hover:scale-110 transition-transform" />
+          </div>
+          <span className="text-slate-800 text-lg md:text-xl font-bold max-w-[200px] md:max-w-none">
+            24/7 Support
           </span>
-        </div>
+        </motion.div>
+
+        {/* Vertical Divider (Desktop) */}
+        <motion.div variants={itemVariants} className="hidden md:block h-12 w-px bg-slate-200"></motion.div>
 
         {/* Icon 2 */}
-        <div className="flex flex-row items-center gap-2 text-3xl md:text-4xl">
-          <FaWater className="text-blue-500 mb-2 md:mb-0 mr-2 md:mr-4" />
-          <span className="text-gray-700 text-lg md:text-2xl font-bold">
-            Free Collection and Delivery
+        <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center gap-4 group">
+          <div className="bg-brand/10 p-4 rounded-full group-hover:bg-brand/20 transition-colors">
+            <FaWater className="text-brand text-3xl group-hover:scale-110 transition-transform" />
+          </div>
+          <span className="text-slate-800 text-lg md:text-xl font-bold max-w-[200px] md:max-w-none">
+            Free Pickup & Delivery
           </span>
-        </div>
+        </motion.div>
+
+        {/* Vertical Divider (Desktop) */}
+        <motion.div variants={itemVariants} className="hidden md:block h-12 w-px bg-slate-200"></motion.div>
 
         {/* Icon 3 */}
-        <div className="flex flex-row items-center gap-2 text-3xl md:text-4xl">
-          <FaTshirt className="text-blue-500 mb-2 md:mb-0 mr-2 md:mr-4" />
-          <span className="text-gray-700 text-lg md:text-2xl mr-4 md:mr-12 font-bold">
-            24Hr Turnaround Time
+        <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center gap-4 group">
+          <div className="bg-brand/10 p-4 rounded-full group-hover:bg-brand/20 transition-colors">
+            <FaTshirt className="text-brand text-3xl group-hover:scale-110 transition-transform" />
+          </div>
+          <span className="text-slate-800 text-lg md:text-xl font-bold max-w-[200px] md:max-w-none">
+            24Hr Turnaround
           </span>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

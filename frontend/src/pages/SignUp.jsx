@@ -1,0 +1,139 @@
+import React, { useState } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import Button from '../components/common/Button';
+import Input from '../components/common/Input';
+import { Helmet } from 'react-helmet-async';
+import { FcGoogle } from 'react-icons/fc';
+
+const SignUp = () => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const { signup, googleSignIn } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/dashboard';
+
+    const handleGoogleSignIn = async () => {
+        try {
+            await googleSignIn();
+            navigate(from, { replace: true });
+        } catch (error) {
+            setError('Failed to sign in with Google');
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (!name || !email || !password) {
+            return setError('Please fill in all fields');
+        }
+
+        setLoading(true);
+        try {
+            await signup(name, email, password);
+            if (window.fbq) window.fbq('track', 'CompleteRegistration');
+            navigate(from, { replace: true }); // Redirect to origin or dashboard
+        } catch (err) {
+            setError('Failed to create an account');
+        }
+        setLoading(false);
+    };
+
+    return (
+        <div className="mt-[80px] min-h-[calc(100vh-80px)] flex items-center justify-center bg-slate-50 pb-12 px-4 sm:px-6 lg:px-8">
+            <Helmet>
+                <title>Sign Up - Andes Laundry</title>
+                <meta name="description" content="Create an account with Andes Laundry to schedule pickups and manage your laundry service orders." />
+            </Helmet>
+            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-soft border border-slate-100">
+                <div className="text-center">
+                    <h2 className="text-3xl font-extrabold text-slate-900">
+                        Create your account
+                    </h2>
+                    <p className="mt-2 text-sm text-slate-600">
+                        Join Andes Laundry today for premium service
+                    </p>
+                </div>
+
+                <div className="mt-8">
+                    <Button
+                        variant="secondary"
+                        className="w-full flex items-center justify-center gap-3 py-3"
+                        onClick={handleGoogleSignIn}
+                        type="button"
+                    >
+                        <FcGoogle className="text-xl" />
+                        Continue with Google
+                    </Button>
+
+                    <div className="relative flex items-center justify-center text-sm mt-6 mb-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-slate-200"></div>
+                        </div>
+                        <span className="relative bg-white px-4 text-slate-500">Or continue with email</span>
+                    </div>
+                </div>
+
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                    {error && (
+                        <div className="bg-red-50 text-red-500 p-3 rounded-lg text-sm text-center">
+                            {error}
+                        </div>
+                    )}
+                    <div className="space-y-4">
+                        <Input
+                            label="Full Name"
+                            type="text"
+                            placeholder="John Doe"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                        <Input
+                            label="Email address"
+                            type="email"
+                            placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Input
+                            label="Password"
+                            type="password"
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+
+                    <div>
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            isLoading={loading}
+                            variant="primary"
+                        >
+                            Sign Up
+                        </Button>
+                    </div>
+
+                    <div className="text-center">
+                        <p className="text-sm text-slate-600">
+                            Already have an account?{' '}
+                            <Link to="/login" className="font-medium text-brand hover:text-brand-dark transition-colors">
+                                Sign in
+                            </Link>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default SignUp;

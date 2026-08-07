@@ -1,220 +1,357 @@
-// import useTypewriter from "../hooks/useTypewriter";
-import van from "../assets/van.png"; // Import the van image
-import LaundryService from "../components/LaundryService.jsx";
-import LaundryStatus from "../components/LaundryStatus.jsx";
-import CustomerSupport from "../components/CustomerSupport.jsx";
+import { Link } from "react-router-dom";
 import Services from "../components/Services.jsx";
 import CustomerReviews from "../components/CustomerReview.jsx";
-import Future from "../components/Future.jsx";
-import BookNow from "../components/BookNow.jsx";
-// import Serviceinfo from "../components/Serviceinfo.jsx";
 import ServiceFeatures from "../components/ServiceFeatures.jsx";
-import MyFooter from "../components/MyFooter.jsx";
-import playstore from "../assets/playstoreicon.svg";
-import appstore from "../assets/appstoreicon.svg"; // Import the App Store icon
-import AndesAssured from "../components/AA.jsx";
-import TeamSection from "../components/TeamSection.jsx";
-import FeatureLeft from "../components/FeatureLeft.jsx";
-import FeatureRight from "../components/FeatureRight.jsx";
+import AppPromo from "../components/AppPromo.jsx";
+import FAQ from "../components/Faq.jsx";
+import { Helmet } from "react-helmet-async";
+import MobileStickyBtn from "../components/MobileStickyBtn.jsx";
+import { motion } from "framer-motion";
+import { FaStar, FaBolt, FaCheckCircle, FaClock, FaShieldAlt, FaTruck, FaLeaf } from "react-icons/fa";
+import TrustedBy from "../components/TrustedBy.jsx";
+
+
+// Assets
+import PrimaryElement from "../assets/PrimaryElement.png";
 import card1 from "../assets/card1.png";
 import card2 from "../assets/card2.png";
 import card3 from "../assets/card3.png";
-import card4 from "../assets/card4.png";
-import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import Appsupport from "../components/Appsupport.jsx";
-import FAQ from "../components/Faq.jsx";
+import avatar1 from "../assets/avatar1.png";
+import avatar2 from "../assets/avatar2.png";
+import avatar3 from "../assets/avatar3.png";
 
-const bulletPoints1 = [
-  { icon: "🔔", text: "Get notified when your order is ready for pick-up" },
-  { icon: "⏱️", text: "Schedule collection at your convenience" },
-];
-
-const bulletPoints2 = [
-  { icon: "📦", text: "Track your delivery in real-time" },
-  { icon: "🚪", text: "Know exactly when your laundry will arrive" },
-];
-
-const bulletPoints3 = [
-  { icon: "📞", text: "24/7 customer support available" },
-  { icon: "💬", text: "Reach us via call or chat in the app" },
-];
-
-const bulletPoints4 = [
-  { icon: "✅", text: "Order scheduled and delivered promptly" },
-  { icon: "📦", text: "Enjoy freshly cleaned clothes at your doorstep" },
-];
+const ScrollReveal = ({ children }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 const LandingPage = () => {
-  // const areas = ["Kothrud", "Pimpri Chinchwad", "Shivaji Nagar"]; // Define the array of names
-  // const typewriterText = useTypewriter(areas, 100, 60, 1500); // Use the useTypewriter hook
 
   return (
-    <div>
-      {/* Hero Section */}
-      <div className="bg-blue-500 md:min-h-screen flex justify-center items-center pt-16 md:pt-2">
-        <main className="container mx-auto px-4 flex flex-col md:flex-row items-center">
-          {/* Text Section */}
-          <div className="mt-16 w-full md:w-[500px] text-white md:ml-32 mb-12 md:mb-0 md:pr-8">
-            <h1 className="text-4xl sm:text-4xl md:text-6xl font-bold md:mb-2 leading-tight mt-2">
-              Laundry & dry
-            </h1>
-            <h1 className="text-4xl sm:text-4xl md:text-6xl font-bold md:mb-2  leading-tight">
-              cleaning within
-            </h1>
-            <h1 className="text-4xl sm:text-4xl md:text-6xl font-bold md:mb-10 mb-2 leading-tight">
-              24h delivery
-            </h1>
+    <div className="overflow-x-hidden font-sans selection:bg-brand selection:text-white">
+      <Helmet>
+        <title>Andes Laundry - Premium Laundry Care</title>
+        <meta name="description" content="Experience effortless laundry care with Andes. Reliable, 24h turnaround, and eco-friendly services in Pune." />
+      </Helmet>
 
-            {/* Typewriter text with fixed height and left alignment */}
-            <h1
-              className="text-2xl sm:text-4xl md:text-5xl font-bold text-yellow-300 md:mb-8 typing text-left"
-              style={{
-                minWidth: "300px", // Set minimum width to the largest word length to avoid shifting
-                minHeight: "70px", // Set a fixed height to avoid vertical shifting
-              }}
+      {/*  HERO SECTION (Massive 2-Column Premium Layout with Animations) */}
+      <div className="bg-gradient-to-br from-brand via-brand to-blue-900 min-h-[100dvh] flex flex-col justify-center relative overflow-hidden pb-12 pt-28 md:pt-32 z-10">
+
+        {/* Deep Background Glow */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-400/20 rounded-full blur-[150px] -z-10 mix-blend-screen pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand-dark/40 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+
+        <main className="container mx-auto px-4 md:px-8 max-w-[1400px] relative z-20 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8">
+
+          {/* LEFT COLUMN: Powerful Typography & CTAs */}
+          <motion.div
+            className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left z-30 pt-10"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="text-yellow-300 flex items-center justify-center lg:justify-start gap-2 font-extrabold tracking-widest uppercase text-sm md:text-base mb-4 drop-shadow-md"
             >
-              {/* {typewriterText} */} Kothrud, Pune
-            </h1>
+              <FaStar className="text-lg" /> Now in Pune
+            </motion.span>
 
-            {/* Store links */}
-            <div className="rounded-lg flex flex-row items-center mt-6 md:mb-4 space-x-4">
-              <div className="flex items-center shadow-white p-2 md:p-4 rounded-lg bg-white">
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.andes.laundry"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center"
-                >
-                  <img
-                    src={playstore}
-                    alt="Play Store"
-                    className="w-11 h-11 md:w-16"
-                  />
-                  <div className="ml-2 md:ml-4">
-                    <p className="text-sm md:text-lg font-semibold text-black">
-                      Download Andes
-                    </p>
-                    <p className="text-xs md:text-sm text-black">
-                      from Playstore
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div className="flex items-center shadow-white p-2 md:p-4 rounded-lg bg-white">
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center"
-                >
-                  <img
-                    src={appstore}
-                    alt="App Store"
-                    className="w-11 h-11 md:w-16"
-                  />
-                  <div className="ml-2 md:ml-4">
-                    <p className="text-sm md:text-lg font-semibold text-black">
-                      Download Andes
-                    </p>
-                    <p className="text-xs md:text-sm text-black">
-                      from App Store
-                    </p>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="text-white text-4xl sm:text-5xl md:text-[clamp(4rem,6vw,6.5rem)] font-black tracking-tighter leading-[1.05] mb-6 drop-shadow-lg text-center lg:text-left"
+            >
+              Effortless <br className="hidden sm:block" /> Laundry Care <br className="hidden sm:block" />
+              <span className="bg-gradient-to-r from-yellow-300 to-yellow-500 text-slate-900 px-4 sm:px-8 py-2 md:py-3 rounded-xl sm:rounded-[2rem] inline-block mt-3 shadow-xl drop-shadow-[0_4px_10px_rgba(250,204,21,0.3)]">
+                ANYTIME
+              </span>
+            </motion.h1>
 
-          {/* Image Section */}
-          <div className="mb-4 w-full md:w-[450px] flex justify-center hidden md:block md:ml-52 md:mt-28">
-            <div className="relative w-80 h-80 sm:w-[35rem] sm:h-[35rem] md:w-[40rem] md:h-[40rem]">
-              <img
-                src={van}
-                alt="Happy customer with laundry"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="text-blue-50 text-lg md:text-xl lg:text-2xl font-medium mb-10 max-w-xl leading-relaxed opacity-95 text-center lg:text-left px-4 lg:px-0"
+            >
+              Experience the ultimate convenience with reliable, premium laundry services tailored perfectly to fit your busy lifestyle.
+            </motion.p>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              className="flex flex-col sm:flex-row gap-5 w-full max-w-md items-center justify-center lg:justify-start mx-auto lg:mx-0"
+            >
+              <Link to="/order" className="w-full sm:w-3/5" onClick={() => window.fbq && window.fbq('track', 'Schedule')}>
+                <button className="w-full h-14 md:h-16 bg-yellow-400 text-slate-900 font-black tracking-wide uppercase rounded-xl md:rounded-2xl shadow-[0_10px_40px_rgba(250,204,21,0.4)] hover:-translate-y-1 hover:bg-yellow-300 transition-all duration-300 text-base md:text-lg flex items-center justify-center gap-2 group relative overflow-hidden">
+                  <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-40 group-hover:animate-[shine_1s_ease-in-out]" />
+                  Schedule Pickup
+                </button>
+              </Link>
+              <Link to="/services" className="w-full sm:w-2/5" onClick={() => window.fbq && window.fbq('track', 'ViewContent')}>
+                <button className="w-full h-14 md:h-16 bg-white/10 backdrop-blur-lg border border-white/30 text-white font-bold uppercase rounded-xl md:rounded-2xl hover:bg-white/20 hover:border-white hover:-translate-y-1 transition-all duration-300 text-base md:text-lg shadow-xl">
+                  View Pricing
+                </button>
+              </Link>
+            </motion.div>
+
+            {/* Trust Badges */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+              className="mt-12 flex flex-col sm:flex-row items-center sm:items-center gap-6 sm:gap-4 opacity-100 sm:opacity-90 hover:opacity-100 transition-opacity w-full lg:justify-start justify-center text-center lg:text-left mx-auto lg:mx-0"
+            >
+              <div className="flex items-center justify-center sm:justify-start gap-4">
+                <div className="flex -space-x-3">
+                  <img src={avatar1} alt="User 1" className="w-10 h-10 rounded-full border-2 border-brand object-cover" />
+                  <img src={avatar2} alt="User 2" className="w-10 h-10 rounded-full border-2 border-brand object-cover" />
+                  <img src={avatar3} alt="User 3" className="w-10 h-10 rounded-full border-2 border-brand object-cover" />
+                </div>
+
+                <p className="text-xs text-blue-100 font-medium tracking-wide">Trusted by<br className="hidden sm:block" /> 10,000+ users</p>
+              </div>
+              <div className="flex flex-col w-full sm:w-auto">
+                <Link to="/download" className="flex items-center justify-center sm:justify-start gap-2 text-xl sm:text-2xl md:text-3xl text-yellow-400 font-black hover:text-yellow-300 transition-colors group bg-white/10 px-6 py-3 rounded-2xl border border-white/20 hover:bg-white/20 backdrop-blur-md shadow-lg w-full" onClick={() => window.fbq && window.fbq('trackCustom', 'DownloadApp')}>
+                  Download App <FaBolt className="text-lg sm:text-xl group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* RIGHT COLUMN: MASSIVE FOCAL IMAGE WITH PARALLAX */}
+          <motion.div
+            className="w-full lg:w-1/2 relative z-30 flex justify-center lg:justify-end mt-12 lg:-mt-16 xl:-mt-24"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
+
+            {/* The Main Huge Image Container */}
+            <div className="relative w-[85%] sm:w-full max-w-[350px] sm:max-w-[450px] lg:max-w-[550px] max-h-[60vh] sm:max-h-[70vh] lg:max-h-[65vh] xl:max-h-[70vh] aspect-[4/5] group mt-4 sm:mt-0">
+              {/* Backglow for the image */}
+              <div className="absolute inset-0 bg-yellow-400 rounded-[3rem] rotate-3 opacity-20 blur-2xl group-hover:rotate-6 group-hover:opacity-30 transition-all duration-700"></div>
+
+              {/* Massive Main Image (Cinematic Slow Zoom) */}
+              <motion.div
+                className="w-full h-full overflow-hidden rounded-[3rem] shadow-2xl border-4 border-white/20 relative z-10"
+              >
+                <motion.img
+                  src={PrimaryElement}
+                  alt="Premium Laundry Care"
+                  className="w-full h-full object-cover"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                />
+              </motion.div>
+
+              {/* OVERLAPPING BENTO BADGE 1: Rating (Floating) */}
+              <motion.div
+                className="absolute -bottom-4 -left-2 sm:-left-6 md:-left-12 bg-white/95 backdrop-blur-xl p-3 sm:p-5 rounded-xl sm:rounded-2xl shadow-2xl border border-white/50 z-40 flex items-center gap-3 sm:gap-4 w-max"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: [0, -10, 0], opacity: 1 }}
+                transition={{
+                  y: { repeat: Infinity, duration: 6, ease: "easeInOut" },
+                  opacity: { delay: 0.8, duration: 0.5 }
+                }}
+              >
+                <div className="bg-green-100 p-2 sm:p-3.5 rounded-lg sm:rounded-xl text-green-600 shadow-inner">
+                  <FaStar className="text-xl sm:text-2xl" />
+                </div>
+                <div className="text-left text-slate-800">
+                  <p className="font-black text-lg sm:text-xl leading-tight flex items-center gap-1">4.8/5</p>
+                  <p className="text-[10px] sm:text-sm text-slate-500 font-bold uppercase tracking-wider">Top Rated</p>
+                </div>
+              </motion.div>
+
+              {/* OVERLAPPING BENTO BADGE 2: 24h Turnaround (Floating) */}
+              <motion.div
+                className="absolute top-6 -right-2 sm:-right-4 md:-right-10 bg-white/95 backdrop-blur-xl p-3 sm:p-5 rounded-xl sm:rounded-2xl shadow-2xl border border-white/50 z-40 flex items-center gap-3 sm:gap-4 w-max"
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: [0, 10, 0], opacity: 1 }}
+                transition={{
+                  y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 },
+                  opacity: { delay: 1, duration: 0.5 }
+                }}
+              >
+                <div className="bg-yellow-100 p-2 sm:p-3.5 rounded-lg sm:rounded-xl text-yellow-600 shadow-inner">
+                  <FaClock className="text-xl sm:text-2xl" />
+                </div>
+                <div className="text-left text-slate-800">
+                  <p className="font-black text-lg sm:text-xl leading-tight">24 Hours</p>
+                  <p className="text-[10px] sm:text-sm text-slate-500 font-bold uppercase tracking-wider">Turnaround</p>
+                </div>
+              </motion.div>
+
             </div>
-          </div>
+          </motion.div>
+
         </main>
       </div>
-      <div className="bg-blue-900 text-white p-8 shadow-md">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between text-center md:text-left">
-          {/* Title and Subtitle Section */}
-          <div className="mb-4 md:mb-0 md:w-1/2 md:ml-36">
-            <h1 className="text-xl md:text-4xl font-bold mb-2 text-yellow-300">
-              The #1 Smart Laundry Service
-            </h1>
-            <p className="text-sm">
-              in categories Dry cleaner, Laundry service and Laundrette{" "}
-            </p>
+
+      {/*  INFINITE SCROLLING TICKER */}
+      <div className="bg-brand py-3 overflow-hidden border-y border-white/10 flex relative whitespace-nowrap z-30">
+        <motion.div
+          className="flex gap-10 items-center text-blue-100 font-bold uppercase tracking-widest text-sm"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ repeat: Infinity, ease: "linear", duration: 15 }}
+        >
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex gap-10 items-center">
+              <span className="flex items-center gap-2"><FaStar className="text-yellow-400 text-lg" /> Premium Care</span>
+              <span className="text-yellow-400">•</span>
+              <span className="flex items-center gap-2"><FaBolt className="text-yellow-400 text-lg" /> 24h Turnaround</span>
+              <span className="text-yellow-400">•</span>
+              <span className="flex items-center gap-2"><FaTruck className="text-yellow-400 text-lg" /> Free Pickup & Delivery</span>
+              <span className="text-yellow-400">•</span>
+              <span className="flex items-center gap-2"><FaLeaf className="text-yellow-400 text-lg" /> Eco-Friendly Detergents</span>
+              <span className="text-yellow-400">•</span>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* TRUSTED BY SECTION */}
+      <TrustedBy />
+
+
+      {/*  HIGHLIGHTED PROMO */}
+      <div className="py-8 md:py-12 bg-slate-50 relative z-20">
+        <ScrollReveal>
+          <AppPromo />
+        </ScrollReveal>
+      </div>
+
+      {/*  PREMIUM SERVICE FEATURES (Icons) - Pulled up with negative margin */}
+      <section className="py-10 md:py-16 bg-white relative -mt-8 rounded-t-[2.5rem] z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
+        <ScrollReveal>
+          <div className="container mx-auto px-4 max-w-7xl">
+            <ServiceFeatures />
           </div>
-          {/* Star Rating Section */}
-          <div className="w-full md:w-1/2 text-center md:text-right">
-            <div className="flex items-center justify-center md:justify-end text-4xl md:mr-36">
-              <FaStar className="text-yellow-400" />
-              <FaStar className="text-yellow-400" />
-              <FaStar className="text-yellow-400" />
-              <FaStar className="text-yellow-400" />
-              <FaStarHalfAlt className="text-yellow-400" />
-              <span className="ml-2 text-sm">(4.5)</span>
+        </ScrollReveal>
+      </section>
+
+      {/*  EXPLORE SERVICES */}
+      <div className="bg-slate-50 py-12 md:py-20 relative z-20 -mt-12 pt-24 rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.02)]">
+        <ScrollReveal>
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">Exceptional Care for Your Garments</h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto font-medium">We treat every fabric with the specialized attention it deserves.</p>
+            </div>
+            <Services />
+          </div>
+        </ScrollReveal>
+      </div>
+
+      {/* 🌟 BENTO BOX GRID (Replacing bulky FeatureLeft/FeatureRight sections) */}
+      <section className="bg-white py-12 md:py-20 relative -mt-10 rounded-t-[3rem] z-30 shadow-[0_-15px_40px_rgba(0,0,0,0.03)]">
+        <ScrollReveal>
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="text-center mb-12">
+              <span className="text-brand font-bold uppercase tracking-widest text-sm mb-2 block">The Andes Advantage</span>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">Laundry Made Simple</h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto font-medium">Experience a seamlessly optimized process from pickup to fresh delivery.</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+
+              {/* Top Left Card */}
+              <div className="bg-blue-50/50 rounded-[2rem] p-8 md:p-10 border border-blue-100 hover:shadow-xl transition-shadow duration-300 relative overflow-hidden group">
+                <div className="relative z-10">
+                  <div className="bg-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm mb-6 text-brand">
+                    <FaShieldAlt className="text-2xl" />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4 leading-tight">A service designed completely for you</h3>
+                  <ul className="space-y-4 text-slate-600 font-medium">
+                    <li className="flex items-start gap-3"><FaCheckCircle className="text-brand mt-1 flex-shrink-0" /> Track order status and ETA via our app</li>
+                    <li className="flex items-start gap-3"><FaCheckCircle className="text-brand mt-1 flex-shrink-0" /> Never wait around with our reliable drivers</li>
+                    <li className="flex items-start gap-3"><FaCheckCircle className="text-brand mt-1 flex-shrink-0" /> Access service history & easily reorder</li>
+                  </ul>
+                </div>
+                <img src={card3} alt="App Interface" className="absolute -bottom-16 -right-16 w-64 opacity-30 group-hover:scale-105 transition-transform duration-700" />
+              </div>
+
+              {/* Top Right Card */}
+              <div className="bg-slate-50 rounded-[2rem] p-8 md:p-10 border border-slate-200 hover:shadow-xl transition-shadow duration-300 relative overflow-hidden group">
+                <div className="relative z-10">
+                  <div className="bg-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm mb-6 text-green-600">
+                    <FaStar className="text-2xl" />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4 leading-tight">Transparent, <br /> affordable pricing</h3>
+                  <ul className="space-y-4 text-slate-600 font-medium">
+                    <li className="flex items-start gap-3"><FaCheckCircle className="text-green-500 mt-1 flex-shrink-0" /> No hidden fees or surprise charges</li>
+                    <li className="flex items-start gap-3"><FaCheckCircle className="text-green-500 mt-1 flex-shrink-0" /> Premium cleaning at highly competitive rates</li>
+                    <li className="flex items-start gap-3"><FaCheckCircle className="text-green-500 mt-1 flex-shrink-0" /> Flexible pricing for specialized dry cleaning</li>
+                  </ul>
+                </div>
+                <img src={card2} alt="Box" className="absolute -bottom-12 -right-12 w-56 opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 mix-blend-multiply" />
+              </div>
+
+              {/* Bottom Full-Width Card */}
+              <div className="bg-brand rounded-[2rem] p-8 md:p-12 shadow-2xl lg:col-span-2 flex flex-col md:flex-row items-center gap-8 md:gap-12 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-l from-white/10 to-transparent"></div>
+
+                <div className="relative z-10 md:w-3/5 text-white">
+                  <div className="bg-white/20 backdrop-blur-md w-14 h-14 rounded-2xl flex items-center justify-center mb-6 text-yellow-300">
+                    <FaClock className="text-2xl" />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-black mb-4 leading-tight">Guaranteed 24h turnaround</h3>
+                  <p className="text-blue-50 text-lg mb-6 opacity-90">Next-day delivery ensuring you always have fresh clothes ready to wear, without compromising our rigorous cleaning quality.</p>
+                  <div className="flex flex-col sm:flex-row gap-4 font-bold text-sm tracking-wide uppercase">
+                    <span className="flex items-center gap-2 bg-black/20 px-4 py-2 rounded-xl"><FaCheckCircle className="text-yellow-400" /> Rapid Processing</span>
+                    <span className="flex items-center gap-2 bg-black/20 px-4 py-2 rounded-xl"><FaCheckCircle className="text-yellow-400" /> Instant Notifications</span>
+                  </div>
+                </div>
+
+                <div className="relative z-10 md:w-2/5 flex justify-center mt-8 md:mt-0">
+                  <div className="relative w-full max-w-[280px] group-hover:-translate-y-2 transition-transform duration-500">
+                    <div className="absolute inset-0 bg-yellow-400 rounded-[2rem] rotate-3 opacity-30 blur-lg"></div>
+                    <img src={card1} alt="Delivery Card" className="relative rounded-[2rem] shadow-2xl border-4 border-white/20" />
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
-        </div>
+        </ScrollReveal>
+      </section>
+
+      {/* 🌟 CUSTOMER INSIGHTS */}
+      <div className="bg-slate-50 py-12 md:py-20 relative z-20 -mt-12 pt-24 rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.02)]">
+        <ScrollReveal>
+          <CustomerReviews />
+        </ScrollReveal>
       </div>
-      {/* Additional Sections */}
-      <section className="px-4 sm:px-8 md:px-16 lg:px-32 py-12 md:py-16 lg:pt-24 md:pb-0">
-        <ServiceFeatures />
-        <LaundryService />
-        <LaundryStatus />
-        <CustomerSupport />
+
+      {/*  FAQ */}
+      <section className="bg-white py-12 md:py-20 relative z-30 -mt-10 rounded-t-[3rem] shadow-[0_-15px_40px_rgba(0,0,0,0.03)]">
+        <ScrollReveal>
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center mb-10">
+              <span className="bg-brand/10 text-brand font-extrabold px-4 py-1.5 rounded-full text-sm tracking-wide uppercase mb-4 inline-block">Support</span>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">Frequently Asked Questions</h2>
+              <p className="text-lg text-slate-600 font-medium">Quick answers for peace of mind. Find out how we operate.</p>
+            </div>
+            <FAQ />
+          </div>
+        </ScrollReveal>
       </section>
-      <Services />
-      <div className="text-center mt-12  bg-white py-4 p-4">
-        <h2 className="text-2xl  text-blue-700">
-          Let's see how we can schedule your next order
-        </h2>
-      </div>
-      <section className="px-4 sm:px-8 md:px-16 lg:px-32 pt-0 pb-0 md:py-0 lg:py-0">
-        {" "}
-        <FeatureLeft
-          title="FLEXIBLE"
-          subtitle="1. Schedule Your Collection"
-          description="Plan your day with ease. Choose a collection time that fits your schedule. We’ll notify you when the order is ready for pick-up, ensuring smooth coordination."
-          imageSrc={card1}
-          bulletPoints={bulletPoints1}
-        />
-        <FeatureRight
-          title="DELIVERY STATUS"
-          subtitle="2. Track Your Delivery"
-          description="Stay informed about your laundry delivery with real-time tracking. Know exactly when your laundry will arrive at your doorstep, making it easy to plan your day."
-          imageSrc={card2}
-          bulletPoints={bulletPoints2}
-        />
-        <FeatureLeft
-          title="CUSTOMER SUPPORT"
-          subtitle="3. Assistance When You Need It"
-          description="We're here to help! Whether you have a question about your order or need assistance with our services, our customer support is always ready to assist you."
-          imageSrc={card3}
-          bulletPoints={bulletPoints3}
-        />
-        <FeatureRight
-          title="ORDER COMPLETED"
-          subtitle="4. Order Scheduled and Delivered"
-          description="Your laundry is handled with care from pick-up to delivery. Enjoy your freshly cleaned clothes delivered right to your door, hassle-free!"
-          imageSrc={card4}
-          bulletPoints={bulletPoints4}
-        />
-      </section>
-      <CustomerReviews />
-      <AndesAssured />
-      <Future />
-      <BookNow />
-      <TeamSection />{" "}
-      <section className="px-4 sm:px-8 md:px-16 lg:px-32 pt-0 pb-0 ">
-        <Appsupport />
-      </section>
-      <FAQ />
-      <MyFooter /> {/* Footer stays at the bottom of the page */}
+
+      <MobileStickyBtn />
     </div>
   );
 };

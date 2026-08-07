@@ -1,0 +1,31 @@
+{
+    "name": "functions",
+    "description": "Cloud Functions for Firebase",
+    "scripts": {
+        "lint": "eslint .",
+        "serve": "npx firebase emulators:start --only functions",
+        "shell": "npx firebase functions:shell",
+        "start": "npm run shell",
+        "deploy": "npx firebase deploy --only functions",
+        "logs": "npx firebase functions:log",
+        "export-users": "node exportUsers.js"
+    },
+    "engines": {
+        "node": "24"
+    },
+    "main": "index.js",
+    "dependencies": {
+        "@google/generative-ai": "^0.24.1",
+        "axios": "^1.13.6",
+        "firebase-admin": "^13.10.0",
+        "firebase-functions": "^7.2.5",
+        "jsonwebtoken": "^9.0.3"
+    },
+    "devDependencies": {
+        "eslint": "^8.15.0",
+        "eslint-config-google": "^0.14.0",
+        "firebase-functions-test": "^3.1.0",
+        "firebase-tools": "^15.18.0"
+    },
+    "private": true
+}
